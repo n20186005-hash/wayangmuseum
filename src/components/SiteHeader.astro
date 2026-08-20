@@ -1,0 +1,31 @@
+---
+/* Design philosophy: the header behaves as a restrained stage curtain—an index for the long-form guide rather than a generic centered navigation bar. */
+interface Props {
+  home?: boolean;
+}
+const { home = false } = Astro.props;
+---
+
+<header class="site-header" data-site-header>
+  <a class="brand" href="/" aria-label="Museum Wayang Guide home">
+    <img src="/logo.svg" alt="" width="48" height="48" />
+    <span>
+      <strong>Museum Wayang</strong>
+      <small><span data-lang-content="id">Panduan Pengunjung Independen</span><span data-lang-content="en">Independent Visitor Guide</span></small>
+    </span>
+  </a>
+  {home ? (
+    <nav class="header-nav" aria-label="Primary navigation">
+      <a href="#kunjungan"><span data-lang-content="id">Kunjungan</span><span data-lang-content="en">Visit</span></a>
+      <a href="#koleksi"><span data-lang-content="id">Koleksi</span><span data-lang-content="en">Collection</span></a>
+      <a href="#rute"><span data-lang-content="id">Rute</span><span data-lang-content="en">Getting here</span></a>
+      <a href="#tanya"><span data-lang-content="id">Tanya jawab</span><span data-lang-content="en">FAQ</span></a>
+    </nav>
+  ) : (
+    <a class="back-home" href="/"><span data-lang-content="id">← Kembali ke panduan</span><span data-lang-content="en">← Back to guide</span></a>
+  )}
+  <div class="language-switch" aria-label="Language selector">
+    <button type="button" data-language-button="id" aria-pressed="true">ID</button>
+    <button type="button" data-language-button="en" aria-pressed="false">EN</button>
+  </div>
+</header>

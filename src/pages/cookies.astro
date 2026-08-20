@@ -1,0 +1,35 @@
+---
+/* Design philosophy: policy content uses the same archival stage system, prioritizing calm reading and direct navigation over modal interruptions. */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import StageRail from '../components/StageRail.astro';
+---
+<BaseLayout title="Cookie Settings — Museum Wayang Guide" description="Pengaturan Cookie Museum Wayang Guide.">
+  <SiteHeader />
+  <StageRail kind="document" />
+  <main class="policy-page cookie-page"><p class="eyebrow">DOCUMENT / 03</p><h1><span data-lang-content="id">Pengaturan Cookie</span><span data-lang-content="en">Cookie Settings</span></h1><p class="policy-date"><span data-lang-content="id">Terakhir diperbarui: Agustus 2026</span><span data-lang-content="en">Last updated: August 2026</span></p>
+    <p data-lang-content="id">Kami menggunakan cookie untuk membantu situs berfungsi dan, jika Anda memilihnya, untuk memahami penggunaan secara anonim.</p><p data-lang-content="en">We use cookies to help the site function and, if you choose, to understand aggregate usage anonymously.</p>
+    <div class="cookie-options">
+      <article><div><h2><span data-lang-content="id">Cookie yang diperlukan</span><span data-lang-content="en">Necessary cookies</span></h2><p data-lang-content="id">Menyimpan pilihan bahasa dan pengaturan dasar situs. Selalu aktif.</p><p data-lang-content="en">Stores language choice and basic site settings. Always active.</p></div><span class="status-pill"><span data-lang-content="id">Aktif</span><span data-lang-content="en">Active</span></span></article>
+      <article><div><h2><span data-lang-content="id">Cookie analitik</span><span data-lang-content="en">Analytics cookies</span></h2><p data-lang-content="id">Mengaktifkan Google Analytics dengan data penggunaan yang dianonimkan.</p><p data-lang-content="en">Enables Google Analytics with anonymized usage data.</p></div><label class="switch"><input id="analytics-choice" type="checkbox" /><span></span><span class="sr-only">Enable analytics</span></label></article>
+      <article><div><h2><span data-lang-content="id">Cookie pemasaran</span><span data-lang-content="en">Marketing cookies</span></h2><p data-lang-content="id">Situs ini tidak menggunakan cookie pemasaran atau iklan yang dipersonalisasi.</p><p data-lang-content="en">This site does not use marketing cookies or personalised advertising.</p></div><span class="status-pill muted"><span data-lang-content="id">Tidak digunakan</span><span data-lang-content="en">Not used</span></span></article>
+    </div>
+    <div class="cookie-actions"><button class="button button-gold" id="save-cookie-preferences"><span data-lang-content="id">Simpan preferensi</span><span data-lang-content="en">Save preferences</span></button><button class="button button-outline" id="reject-all"><span data-lang-content="id">Tolak semua analitik</span><span data-lang-content="en">Reject all analytics</span></button><p id="cookie-message" role="status" aria-live="polite"></p></div>
+  </main>
+  <SiteFooter />
+  <script is:inline>
+    const choice = document.querySelector('#analytics-choice');
+    const message = document.querySelector('#cookie-message');
+    choice.checked = localStorage.getItem('mw-analytics') === 'granted';
+    document.querySelector('#save-cookie-preferences').addEventListener('click', () => {
+      localStorage.setItem('mw-analytics', choice.checked ? 'granted' : 'denied');
+      message.textContent = document.documentElement.lang === 'en' ? 'Preferences saved. Reloading to apply your choice.' : 'Preferensi disimpan. Memuat ulang untuk menerapkan pilihan.';
+      window.setTimeout(() => window.location.reload(), 500);
+    });
+    document.querySelector('#reject-all').addEventListener('click', () => {
+      choice.checked = false; localStorage.setItem('mw-analytics', 'denied');
+      message.textContent = document.documentElement.lang === 'en' ? 'Analytics has been disabled.' : 'Analitik telah dinonaktifkan.';
+    });
+  </script>
+</BaseLayout>

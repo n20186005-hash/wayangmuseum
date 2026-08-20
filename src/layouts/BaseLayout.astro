@@ -1,0 +1,70 @@
+---
+/* Design philosophy: Layar Indigo turns Museum Wayang's puppet screen, side silhouettes, and calm archival texture into a modern, highly legible cultural guide. */
+import '../styles/global.css';
+import '../styles/stage.css';
+import '../styles/guide-expansion.css';
+
+interface Props {
+  title: string;
+  description: string;
+  pathname?: string;
+}
+
+const { title, description, pathname = '/' } = Astro.props;
+const canonical = Astro.site ? new URL(pathname, Astro.site).toString() : undefined;
+const gaId = 'G-HXM22WWPKP';
+---
+
+<!doctype html>
+<html lang="id" class="no-js">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#1E2A52" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+    <script is:inline define:vars={{ gaId }}>
+      document.documentElement.classList.remove('no-js');
+      const savedLanguage = localStorage.getItem('mw-language') || 'id';
+      document.documentElement.classList.toggle('lang-en', savedLanguage === 'en');
+      document.documentElement.lang = savedLanguage;
+      const updateLanguage = (language) => {
+        document.documentElement.classList.toggle('lang-en', language === 'en');
+        document.documentElement.lang = language;
+        localStorage.setItem('mw-language', language);
+        document.querySelectorAll('[data-language-button]').forEach((button) => {
+          button.setAttribute('aria-pressed', String(button.dataset.languageButton === language));
+        });
+      };
+      document.querySelectorAll('[data-language-button]').forEach((button) => {
+        button.addEventListener('click', () => updateLanguage(button.dataset.languageButton || 'id'));
+      });
+      updateLanguage(savedLanguage);
+      if (localStorage.getItem('mw-analytics') === 'granted') {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', gaId, { anonymize_ip: true });
+        const analytics = document.createElement('script');
+        analytics.async = true;
+        analytics.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+        document.head.appendChild(analytics);
+      }
+    </script>
+  </body>
+</html>
