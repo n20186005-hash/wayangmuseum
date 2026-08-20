@@ -108,6 +108,9 @@ temp/
 # Webdev artifacts (checkpoint zips, migrations, etc.)
 .webdev/
 
+# Wrangler state cache and deploy redirect config (env-local only, must not be committed)
+.wrangler/
+
 # Manus version file (auto-generated, not part of source)
 client/public/__manus__/version.json
 .project-config.json
