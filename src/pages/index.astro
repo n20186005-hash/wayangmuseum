@@ -5,18 +5,25 @@ import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import StageRail from '../components/StageRail.astro';
 import GuideExpansion from '../components/GuideExpansion.astro';
+import SourcesSection from '../components/SourcesSection.astro';
+import { attraction, SITE_URL, SITE_NAME_EN } from '../data/site';
 
-const canonical = Astro.site ? new URL('/', Astro.site).toString() : undefined;
-const description = 'Panduan independen bilingual untuk Museum Wayang di Kota Tua Jakarta: sejarah, koleksi, jam kunjungan, akses, fasilitas, dan rute.';
+const base = Astro.site ? Astro.site.toString().replace(/\/+$/, '') : SITE_URL;
+const canonical = Astro.site ? new URL('/', Astro.site).toString() : `${SITE_URL}/`;
+const heroImage = `${base}/assets/museum-wayang-exterior.jpg`;
+const description = `Museum Wayang in Kota Tua, Jakarta: adult ticket Rp5,000, open Tue–Sun 09:00–17:00. Wayang kulit & golek puppet collections, building history, transport, and visitor tips.`;
 const schema = {
   '@context': 'https://schema.org',
   '@type': ['TouristAttraction', 'LocalBusiness'],
-  name: 'Museum Wayang',
-  alternateName: 'Wayang Museum',
+  '@id': `${base}/#attraction`,
+  name: attraction.fullName,
+  alternateName: [attraction.shortName, `${attraction.fullName} ${attraction.city}`, 'Museum Wayang Jakarta'],
   description,
   inLanguage: ['id', 'en'],
   url: canonical,
-  image: '/assets/museum-wayang-exterior.jpg',
+  image: [heroImage],
+  isAccessibleForFree: false,
+  priceRange: 'Rp2,000–Rp5,000',
   address: {
     '@type': 'PostalAddress',
     streetAddress: 'Jl. Pintu Besar Utara No. 27, Pinangsia',
@@ -25,27 +32,41 @@ const schema = {
     postalCode: '11110',
     addressCountry: 'ID'
   },
-  geo: { '@type': 'GeoCoordinates', latitude: -6.134611, longitude: 106.812714 },
+  geo: { '@type': 'GeoCoordinates', latitude: attraction.latitude, longitude: attraction.longitude },
   openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], opens: '09:00', closes: '17:00' }],
-  aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.5', reviewCount: '5073', bestRating: '5', worstRating: '1' },
-  sameAs: ['https://mitramuseumjakarta.id/wayang']
+  aggregateRating: { '@type': 'AggregateRating', ratingValue: attraction.reviewRating, reviewCount: attraction.reviewCount, bestRating: '5', worstRating: '1' },
+  hasMap: attraction.mapsShareUrl,
+  sameAs: [attraction.mapsShareUrl, attraction.govtTourismUrl, 'https://mitramuseumjakarta.id/wayang']
+};
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: attraction.fullName, item: canonical },
+    { '@type': 'ListItem', position: 2, name: attraction.city, item: canonical },
+    { '@type': 'ListItem', position: 3, name: attraction.stateProvince, item: canonical },
+    { '@type': 'ListItem', position: 4, name: attraction.country, item: canonical }
+  ]
 };
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
   mainEntity: [
     { '@type': 'Question', name: 'Kapan Museum Wayang buka?', acceptedAnswer: { '@type': 'Answer', text: 'Informasi institusi mencantumkan Selasa–Minggu, pukul 09.00–17.00. Periksa kembali sebelum berangkat karena jadwal dapat berubah.' } },
-    { '@type': 'Question', name: 'Berapa biaya masuknya?', acceptedAnswer: { '@type': 'Answer', text: 'Halaman institusi mencantumkan tarif dewasa Rp5.000, mahasiswa Rp3.000, dan anak-anak/pelajar Rp2.000. Harap periksa kembali karena tarif dapat berubah.' } },
+    { '@type': 'Question', name: 'Berapa biaya masuknya?', acceptedAnswer: { '@type': 'Answer', text: 'Halaman institusi mencantumkan tarif dewasa Rp5.000, mahasiswa Rp3.000, dan anak-anak/pelajar Rp2.000. Museum bukan gratis; siapkan metode pembayaran yang berlaku dan konfirmasi di loket.' } },
     { '@type': 'Question', name: 'Bagaimana cara menuju Museum Wayang dengan kereta?', acceptedAnswer: { '@type': 'Answer', text: 'Stasiun Jakarta Kota disebut sebagai titik kereta terdekat; halaman institusi memperkirakan jarak jalan kaki sekitar 300 meter ke arah timur laut.' } },
     { '@type': 'Question', name: 'Bagaimana dari bandara?', acceptedAnswer: { '@type': 'Answer', text: 'Dari Soekarno–Hatta, kereta bandara atau bus bandara dapat digunakan untuk tahap awal ke pusat kota dan biasanya memerlukan perpindahan menuju Kota Tua. Periksa rute dan kondisi perjalanan secara langsung pada hari keberangkatan.' } },
     { '@type': 'Question', name: 'Apakah akses kursi roda tersedia?', acceptedAnswer: { '@type': 'Answer', text: 'Informasi institusi mencatat bahwa ramp di pintu masuk belum tersedia dan kursi roda tidak disewakan; akses alternatif menuju lantai dua disebut tersedia melalui pintu keluar pengunjung. Periksa kebutuhan aksesibilitas sebelum tiba.' } },
+    { '@type': 'Question', name: 'Apa alamat lengkap Museum Wayang?', acceptedAnswer: { '@type': 'Answer', text: 'Jl. Pintu Besar Utara No. 27, Pinangsia, Taman Sari, Jakarta Barat, DKI Jakarta 11110, Indonesia. Lokasinya tepat di tepi Fatahillah Square, Kota Tua.' } },
+    { '@type': 'Question', name: 'Apa saja tempat menarik di sekitar Museum Wayang?', acceptedAnswer: { '@type': 'Answer', text: 'Fatahillah Square berada tepat di depan museum. Museum Sejarah Jakarta (Jakarta History Museum) dan tepian Kali Besar juga berjarak dekat, cocok untuk dirangkai dalam satu rute jalan kaki.' } },
     { '@type': 'Question', name: 'Apakah situs ini merekomendasikan usaha tertentu?', acceptedAnswer: { '@type': 'Answer', text: 'Tidak. Museum Wayang Guide menjelaskan jenis layanan yang mungkin dibutuhkan pengunjung, tanpa memberi peringkat, afiliasi, atau rekomendasi komersial terhadap usaha tertentu.' } }
   ]
 };
 ---
 
-<BaseLayout title="Museum Wayang Guide — Kota Tua Jakarta" description={description}>
+<BaseLayout title={SITE_NAME_EN} description={description} ogImage={heroImage} ogImageAlt={`${attraction.fullName} in ${attraction.city}, ${attraction.country}`}>
   <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)}></script>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)}></script>
   <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)}></script>
   <SiteHeader home />
   <StageRail />
@@ -57,8 +78,9 @@ const faqSchema = {
       <img class="hero-brand-mark" src="/logo.svg" alt="" aria-hidden="true" />
       <div class="hero-stage" aria-hidden="true"><i class="hero-stage__arch"></i><i class="hero-stage__shadow hero-stage__shadow--one"></i><i class="hero-stage__shadow hero-stage__shadow--two"></i><span data-lang-content="id">LAYAR / 01</span><span data-lang-content="en">SCREEN / 01</span></div>
       <div class="hero-content">
-        <p class="eyebrow"><span data-lang-content="id">KOTA TUA · JAKARTA BARAT</span><span data-lang-content="en">KOTA TUA · WEST JAKARTA</span></p>
-        <h1 id="hero-title"><span data-lang-content="id">Masuk ke layar, temukan cerita.</span><span data-lang-content="en">Step into the screen, find the story.</span></h1>
+        <p class="eyebrow"><span data-lang-content="id">MUSEUM WAYANG · KOTA TUA JAKARTA</span><span data-lang-content="en">MUSEUM WAYANG · KOTA TUA JAKARTA</span></p>
+        <h1 id="hero-title"><span class="hero-title-main">Museum Wayang</span> <span class="hero-title-city">Jakarta</span></h1>
+        <p class="hero-tagline"><span data-lang-content="id">Masuk ke layar, temukan cerita.</span><span data-lang-content="en">Step into the screen, find the story.</span></p>
         <p class="hero-intro"><span data-lang-content="id">Panduan independen untuk memahami Museum Wayang—ruang koleksi, sejarah bangunan, dan hal-hal praktis sebelum tiba.</span><span data-lang-content="en">An independent guide to Museum Wayang—its collections, the building’s layered past, and practical details for your visit.</span></p>
         <div class="hero-actions">
           <a class="button button-gold" href="#kunjungan"><span data-lang-content="id">Rencanakan kunjungan</span><span data-lang-content="en">Plan a visit</span></a>
@@ -77,6 +99,19 @@ const faqSchema = {
       <p><span>02</span><a href="#koleksi"><span data-lang-content="id">Koleksi</span><span data-lang-content="en">Collection</span></a></p>
       <p><span>03</span><a href="#kunjungan"><span data-lang-content="id">Kunjungan</span><span data-lang-content="en">Visit</span></a></p>
       <p><span>04</span><a href="#rute"><span data-lang-content="id">Transportasi</span><span data-lang-content="en">Getting here</span></a></p>
+    </section>
+
+    <section class="entity-intro" aria-label="About Museum Wayang">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><span data-lang-content="id">Museum Wayang</span><span data-lang-content="en">Museum Wayang</span></li>
+          <li><span data-lang-content="id">Jakarta</span><span data-lang-content="en">Jakarta</span></li>
+          <li><span data-lang-content="id">DKI Jakarta</span><span data-lang-content="en">DKI Jakarta</span></li>
+          <li><span data-lang-content="id">Indonesia</span><span data-lang-content="en">Indonesia</span></li>
+        </ol>
+      </nav>
+      <h2 class="entity-heading"><span data-lang-content="id">Tentang Museum Wayang</span><span data-lang-content="en">About Museum Wayang</span></h2>
+      <p class="entity-statement"><span data-lang-content="id"><strong>Museum Wayang</strong>, yang juga dikenal sebagai <strong>Wayang Museum</strong>, adalah museum wayang di jantung Kota Tua, Jakarta, Indonesia. Panduan ini menjadi pintu masuk praktis bagi pelancong yang mengunjungi kawasan bersejarah ini.</span><span data-lang-content="en"><strong>Museum Wayang</strong>, widely recognized as the <strong>Wayang Museum</strong>, is a wayang (puppet) museum in the heart of Kota Tua, Jakarta, Indonesia. This guide serves as a practical gateway for travellers exploring the historic district.</span></p>
     </section>
 
     <section id="tentang" class="section scene-section history-section motif-arch">
@@ -140,13 +175,14 @@ const faqSchema = {
           <article><h3><span>04</span><span data-lang-content="id">Parkir</span><span data-lang-content="en">Parking</span></h3><p data-lang-content="id">Rujukan institusi menyebut parkir Jalan Cengkeh dan kawasan Kali Besar. Tempat dapat terbatas pada akhir pekan; pertimbangkan transportasi umum dan konfirmasi kondisi setempat.</p><p data-lang-content="en">The institution cites Jalan Cengkeh parking and the Kali Besar area. Capacity may be limited at weekends; consider public transport and confirm local conditions.</p></article>
         </div>
         <div class="map-wrap"><iframe title="Lokasi Museum Wayang di Google Maps" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.968545408292!2d106.80973051244983!3d-6.134928693826295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6a1dff48f259ff%3A0xfeb6bfd7e15db853!2z5pyo5YG25Y2a54mp6aaG!5e0!3m2!1sid!2sid!4v1787189535362!5m2!1sid!2sid" width="600" height="450" style="border:0" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+        <p class="map-note"><span data-lang-content="id">Verifikasi jadwal, tarif, dan akses terkini melalui </span><span data-lang-content="en">Verify the latest schedules, fees, and access via the </span><a href={attraction.govtTourismUrl} target="_blank" rel="noopener noreferrer"><span data-lang-content="id">situs resmi Pemerintah Provinsi DKI Jakarta</span><span data-lang-content="en">official DKI Jakarta Provincial Government site</span></a><span data-lang-content="id">.</span><span data-lang-content="en">.</span></p>
       </div>
     </section>
 
     <section class="section surrounding-section motif-shadow-frame">
       <div class="surrounding-head"><p class="eyebrow"><span data-lang-content="id">DI SEKITAR KOTA TUA</span><span data-lang-content="en">AROUND KOTA TUA</span></p><h2><span data-lang-content="id">Bangun rute yang tidak tergesa-gesa.</span><span data-lang-content="en">Build an unhurried route.</span></h2></div>
       <div class="surrounding-grid">
-        <article><h3><span data-lang-content="id">Tempat terdekat</span><span data-lang-content="en">Nearby sights</span></h3><p data-lang-content="id">Fatahillah Square berada di depan museum. Untuk memperpanjang konteks sejarah, pertimbangkan museum sejarah, seni-rupa/keramik, atau tepian Kali Besar sebagai tujuan berjalan kaki—periksa jam buka masing-masing.</p><p data-lang-content="en">Fatahillah Square is directly outside. To extend the historical context, consider the history museum, fine art/ceramics museum, or Kali Besar waterfront on foot—check each venue’s opening hours.</p></article>
+        <article><h3><span data-lang-content="id">Tempat terdekat</span><span data-lang-content="en">Nearby sights</span></h3><p data-lang-content="id"><strong>Fatahillah Square</strong> berada tepat di depan museum. Untuk memperpanjang konteks sejarah, pertimbangkan <strong>Museum Sejarah Jakarta</strong> (Jakarta History Museum), museum seni rupa/keramik, atau tepian <strong>Kali Besar</strong> sebagai tujuan berjalan kaki—periksa jam buka masing-masing sebelum berangkat.</p><p data-lang-content="en"><strong>Fatahillah Square</strong> is directly outside the museum. To extend the historical context, consider the <strong>Jakarta History Museum</strong>, the fine art/ceramics museum, or the <strong>Kali Besar</strong> waterfront on foot—check each venue’s opening hours before you go.</p></article>
         <article><h3><span data-lang-content="id">Makan & minum</span><span data-lang-content="en">Food & drink</span></h3><p data-lang-content="id">Kawasan sekitar menyediakan pilihan warung, kafe, dan restoran dalam berbagai rentang harga. Pilih berdasarkan kebutuhan diet, kebersihan, jam buka, dan jarak jalan kaki; panduan ini tidak merekomendasikan usaha tertentu.</p><p data-lang-content="en">The area has food stalls, cafés, and restaurants at different price points. Choose based on dietary needs, hygiene, opening hours, and walking distance; this guide does not endorse particular businesses.</p></article>
         <article><h3><span data-lang-content="id">Kebutuhan harian</span><span data-lang-content="en">Everyday needs</span></h3><p data-lang-content="id">Toilet tersedia menurut halaman museum. Untuk ATM, toko kebutuhan ringan, penginapan, bahan bakar, atau pengisian kendaraan listrik, rencanakan dari peta langsung sesuai arah perjalanan dan jenis kendaraan.</p><p data-lang-content="en">Toilets are listed by the museum. For cash access, convenience goods, accommodation, fuel, or EV charging, plan directly from a map according to your route and vehicle type.</p></article>
       </div>
@@ -170,6 +206,8 @@ const faqSchema = {
         <details data-extra><summary><span data-lang-content="id">Apakah panduan ini merekomendasikan tempat makan atau hotel tertentu?</span><span data-lang-content="en">Does this guide recommend specific places to eat or stay?</span></summary><p data-lang-content="id">Tidak. Situs ini hanya menjelaskan jenis layanan yang mungkin dibutuhkan pengunjung, seperti tempat makan, penginapan, toko kebutuhan harian, atau layanan mobilitas. Kami tidak memberi peringkat, afiliasi, maupun rekomendasi usaha tertentu.</p><p data-lang-content="en">No. This site only explains service types visitors may need, such as food, accommodation, daily supplies, or mobility services. We do not give rankings, affiliations, or recommendations for particular businesses.</p></details>
       </div>
     </section>
+
+    <SourcesSection />
 
     <section class="feedback-section">
       <div><p class="eyebrow"><span data-lang-content="id">BANTU PERBAIKI PANDUAN</span><span data-lang-content="en">HELP IMPROVE THE GUIDE</span></p><h2><span data-lang-content="id">Menemukan informasi yang perlu diperbarui?</span><span data-lang-content="en">Found a detail that needs updating?</span></h2><p data-lang-content="id">Kirimkan koreksi, sumber publik, atau catatan aksesibilitas. Email akan dibuka di aplikasi email Anda; kami tidak menyimpan formulir di situs ini.</p><p data-lang-content="en">Send a correction, public source, or accessibility note. Your email app will open; this site does not store submission forms.</p></div>

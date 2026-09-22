@@ -8,10 +8,17 @@ interface Props {
   title: string;
   description: string;
   pathname?: string;
+  ogImage?: string;
+  ogImageAlt?: string;
 }
 
-const { title, description, pathname = '/' } = Astro.props;
+const { title, description, pathname = '/', ogImage, ogImageAlt } = Astro.props;
 const canonical = Astro.site ? new URL(pathname, Astro.site).toString() : undefined;
+const base = Astro.site ? Astro.site.toString().replace(/\/+$/, '') : 'https://wayangmuseum.com';
+const ogImageAbsolute = ogImage
+  ? (ogImage.startsWith('http') ? ogImage : `${base}${ogImage.startsWith('/') ? '' : '/'}${ogImage}`)
+  : `${base}/assets/museum-wayang-exterior.jpg`;
+const ogImageAltText = ogImageAlt ?? 'Museum Wayang in Kota Tua, Jakarta';
 const gaId = 'G-HXM22WWPKP';
 ---
 
@@ -23,14 +30,21 @@ const gaId = 'G-HXM22WWPKP';
     <meta name="description" content={description} />
     <meta name="theme-color" content="#1E2A52" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     {canonical && <link rel="canonical" href={canonical} />}
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {canonical && <meta property="og:url" content={canonical} />}
+    <meta property="og:image" content={ogImageAbsolute} />
+    <meta property="og:image:alt" content={ogImageAltText} />
     <meta property="og:locale" content="id_ID" />
     <meta property="og:locale:alternate" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageAbsolute} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -64,6 +78,13 @@ const gaId = 'G-HXM22WWPKP';
         analytics.async = true;
         analytics.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
         document.head.appendChild(analytics);
+      }
+    </script>
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
       }
     </script>
   </body>

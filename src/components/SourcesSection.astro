@@ -1,0 +1,82 @@
+---
+/* E-E-A-T: a dedicated, transparent references panel that strengthens the site's
+   authority by surfacing the open and institutional sources behind the guide. */
+import { attraction } from '../data/site';
+
+const sources = [
+  {
+    titleId: 'UNESCO — Warisan Budaya Takbenda',
+    titleEn: 'UNESCO — Intangible Cultural Heritage',
+    name: 'Wayang puppet theatre',
+    url: 'https://ich.unesco.org/en/RL/wayang-puppet-theatre-00063'
+  },
+  {
+    titleId: 'Mitra Museum Jakarta',
+    titleEn: 'Mitra Museum Jakarta',
+    name: 'Profil institusional Museum Wayang',
+    url: 'https://mitramuseumjakarta.id/wayang'
+  },
+  {
+    titleId: 'Pemerintah Provinsi DKI Jakarta',
+    titleEn: 'DKI Jakarta Provincial Government',
+    name: 'Portal resmi / Official portal',
+    url: attraction.govtTourismUrl
+  },
+  {
+    titleId: 'Google Maps',
+    titleEn: 'Google Maps',
+    name: 'Lokasi Museum Wayang',
+    url: attraction.mapsShareUrl
+  }
+];
+---
+
+<section id="sumber" class="section sources-section motif-perforation">
+  <div class="sources-heading">
+    <p class="eyebrow"><span data-lang-content="id">RUJUKAN & SUMBER</span><span data-lang-content="en">REFERENCES & SOURCES</span></p>
+    <h2><span data-lang-content="id">Sumber yang kami rujuk</span><span data-lang-content="en">Sources we reference</span></h2>
+    <p data-lang-content="id">Panduan ini menyusun informasi dari sumber terbuka dan institusional berikut. Selalu verifikasi detail terbaru melalui kanal resmi sebelum berkunjung.</p>
+    <p data-lang-content="en">This guide compiles information from the following open and institutional sources. Always verify the latest details through official channels before visiting.</p>
+  </div>
+  <ul class="sources-list">
+    {sources.map((s) => (
+      <li>
+        <a href={s.url} target="_blank" rel="noopener noreferrer">
+          <strong><span data-lang-content="id">{s.titleId}</span><span data-lang-content="en">{s.titleEn}</span></strong>
+          <span class="sources-name">{s.name}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .sources-section { background: #f9f5ec; }
+  .sources-heading { max-width: 760px; margin-bottom: 2.5rem; }
+  .sources-heading h2 { margin: .4rem 0 1rem; }
+  .sources-heading p { max-width: 640px; color: #465067; }
+  .sources-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: rgba(30, 42, 82, .18);
+    border: 1px solid rgba(30, 42, 82, .18);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .sources-list li { background: #f9f5ec; }
+  .sources-list a {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    padding: 1.3rem 1.5rem;
+    transition: background 160ms var(--easing);
+  }
+  .sources-list a:hover { background: #efe7d6; }
+  .sources-list strong { color: var(--indigo); font-size: .92rem; }
+  .sources-name { color: var(--muted); font-size: .82rem; }
+  @media (max-width: 900px) {
+    .sources-list { grid-template-columns: 1fr; }
+  }
+</style>

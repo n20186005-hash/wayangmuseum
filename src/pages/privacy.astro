@@ -4,8 +4,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import StageRail from '../components/StageRail.astro';
+import { withSiteName } from '../data/site';
 ---
-<BaseLayout title="Privacy Policy — Museum Wayang Guide" description="Kebijakan Privasi Museum Wayang Guide.">
+<BaseLayout title={withSiteName('Privacy Policy')} description="Kebijakan Privasi Museum Wayang Guide." pathname="/privacy/">
   <SiteHeader />
   <StageRail kind="document" />
   <main class="policy-page"><p class="eyebrow">DOCUMENT / 01</p><h1><span data-lang-content="id">Kebijakan Privasi</span><span data-lang-content="en">Privacy Policy</span></h1><p class="policy-date"><span data-lang-content="id">Terakhir diperbarui: Agustus 2026</span><span data-lang-content="en">Last updated: August 2026</span></p>

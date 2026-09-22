@@ -4,8 +4,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import StageRail from '../components/StageRail.astro';
+import { withSiteName } from '../data/site';
 ---
-<BaseLayout title="Cookie Settings — Museum Wayang Guide" description="Pengaturan Cookie Museum Wayang Guide.">
+<BaseLayout title={withSiteName('Cookie Settings')} description="Pengaturan Cookie Museum Wayang Guide." pathname="/cookies/">
   <SiteHeader />
   <StageRail kind="document" />
   <main class="policy-page cookie-page"><p class="eyebrow">DOCUMENT / 03</p><h1><span data-lang-content="id">Pengaturan Cookie</span><span data-lang-content="en">Cookie Settings</span></h1><p class="policy-date"><span data-lang-content="id">Terakhir diperbarui: Agustus 2026</span><span data-lang-content="en">Last updated: August 2026</span></p>
