@@ -1,91 +1,12 @@
 ---
-/* Design philosophy: Layar Indigo turns Museum Wayang's puppet screen, side silhouettes, and calm archival texture into a modern, highly legible cultural guide. */
 import '../styles/global.css';
-import '../styles/stage.css';
-import '../styles/guide-expansion.css';
-
-interface Props {
-  title: string;
-  description: string;
-  pathname?: string;
-  ogImage?: string;
-  ogImageAlt?: string;
-}
-
-const { title, description, pathname = '/', ogImage, ogImageAlt } = Astro.props;
-const canonical = Astro.site ? new URL(pathname, Astro.site).toString() : undefined;
-const base = Astro.site ? Astro.site.toString().replace(/\/+$/, '') : 'https://wayangmuseum.com';
-const ogImageAbsolute = ogImage
-  ? (ogImage.startsWith('http') ? ogImage : `${base}${ogImage.startsWith('/') ? '' : '/'}${ogImage}`)
-  : `${base}/assets/museum-wayang-exterior.jpg`;
-const ogImageAltText = ogImageAlt ?? 'Museum Wayang in Kota Tua, Jakarta';
-const gaId = 'G-HXM22WWPKP';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { paths, type Locale, type PageKey } from '../data/site';
+interface Props { title: string; description: string; locale?: Locale; pageKey?: PageKey; noIndex?: boolean; }
+const { title, description, locale = 'id', pageKey = 'home', noIndex = false } = Astro.props;
+const finalTitle = pageKey === 'home' || noIndex ? title : title + ' | Museum Wayang Jakarta';
+const canonical = !noIndex ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const ogImage = new URL('/assets/museum-wayang-exterior.webp', Astro.site).href;
 ---
-
-<!doctype html>
-<html lang="id" class="no-js">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
-    <meta name="theme-color" content="#1E2A52" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/icon-192.png" />
-    <link rel="manifest" href="/manifest.webmanifest" />
-    {canonical && <link rel="canonical" href={canonical} />}
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    {canonical && <meta property="og:url" content={canonical} />}
-    <meta property="og:image" content={ogImageAbsolute} />
-    <meta property="og:image:alt" content={ogImageAltText} />
-    <meta property="og:locale" content="id_ID" />
-    <meta property="og:locale:alternate" content="en_US" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImageAbsolute} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <title>{title}</title>
-  </head>
-  <body>
-    <slot />
-    <script is:inline define:vars={{ gaId }}>
-      document.documentElement.classList.remove('no-js');
-      const savedLanguage = localStorage.getItem('mw-language') || 'id';
-      document.documentElement.classList.toggle('lang-en', savedLanguage === 'en');
-      document.documentElement.lang = savedLanguage;
-      const updateLanguage = (language) => {
-        document.documentElement.classList.toggle('lang-en', language === 'en');
-        document.documentElement.lang = language;
-        localStorage.setItem('mw-language', language);
-        document.querySelectorAll('[data-language-button]').forEach((button) => {
-          button.setAttribute('aria-pressed', String(button.dataset.languageButton === language));
-        });
-      };
-      document.querySelectorAll('[data-language-button]').forEach((button) => {
-        button.addEventListener('click', () => updateLanguage(button.dataset.languageButton || 'id'));
-      });
-      updateLanguage(savedLanguage);
-      if (localStorage.getItem('mw-analytics') === 'granted') {
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', gaId, { anonymize_ip: true });
-        const analytics = document.createElement('script');
-        analytics.async = true;
-        analytics.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
-        document.head.appendChild(analytics);
-      }
-    </script>
-    <script is:inline>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch(() => {});
-        });
-      }
-    </script>
-  </body>
-</html>
+<!doctype html><html lang={locale}><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="theme-color" content="#1e2a52" /><title>{finalTitle}</title><meta name="description" content={description} /><meta name="robots" content={noIndex ? 'noindex,follow' : 'index,follow,max-image-preview:large'} />{canonical && <link rel="canonical" href={canonical} />}{!noIndex && <><link rel="alternate" hreflang="id-ID" href={new URL(paths[pageKey].id,Astro.site).href} /><link rel="alternate" hreflang="en" href={new URL(paths[pageKey].en,Astro.site).href} /><link rel="alternate" hreflang="x-default" href={new URL(paths[pageKey].id,Astro.site).href} /></>}<meta property="og:type" content="website" /><meta property="og:site_name" content={locale === 'id' ? 'Museum Wayang — Panduan Independen' : 'Museum Wayang — Independent Guide'} /><meta property="og:locale" content={locale === 'id' ? 'id_ID' : 'en_US'} /><meta property="og:title" content={finalTitle} /><meta property="og:description" content={description} />{canonical && <meta property="og:url" content={canonical} />}<meta property="og:image" content={ogImage} /><meta property="og:image:alt" content={locale === 'id' ? 'Foto arsip eksterior Museum Wayang oleh Chainwit.' : 'Archival Museum Wayang exterior photograph by Chainwit.'} /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content={finalTitle} /><meta name="twitter:description" content={description} /><link rel="icon" href="/favicon.svg" type="image/svg+xml" /><link rel="apple-touch-icon" href="/icon-192.png" /></head><body><a class="skip-link" href="#konten">{locale === 'id' ? 'Lewati ke isi' : 'Skip to content'}</a><SiteHeader locale={locale} pageKey={pageKey} /><slot /><SiteFooter locale={locale} /><script is:inline src="/js/consent.js" defer></script><script is:inline src="/js/retire-offline.js" defer></script></body></html>

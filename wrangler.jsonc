@@ -1,12 +1,16 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "museum-wayang-guide",
+  "name": "wayangmuseum",
   "compatibility_date": "2026-08-20",
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "404-page"
+    "not_found_handling": "404-page",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "html_handling": "auto-trailing-slash"
   },
   "observability": {
     "enabled": true
-  }
+  },
+  "main": "src/worker.ts"
 }
