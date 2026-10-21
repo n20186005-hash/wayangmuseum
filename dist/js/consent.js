@@ -2,13 +2,15 @@
   const key = 'wayang_cookie_preferences', deniedKey = 'wayang_analytics_denied', gaId = 'G-HXM22WWPKP';
   const en = document.documentElement.lang === 'en';
   const messages = en ? {
-    on: 'Analytics allowed in this browser.', off: 'Analytics rejected in this browser.',
-    session: 'Analytics is off for this tab, including navigation and refresh. The permanent choice could not be saved and the old choice may remain. Clear site data in browser settings to remove stored permission.',
-    page: 'Analytics is off on this page. Storage is unavailable; clear site data in browser settings before navigating or refreshing.'
+    on: 'Google Analytics allowed in this browser.', off: 'Google Analytics rejected in this browser.',
+    tab: 'Google Analytics remains off in this tab. Save an allowed choice here to enable it.',
+    session: 'Google Analytics is off for this tab, including navigation and refresh. The permanent choice could not be saved and the old choice may remain in other tabs. Clear site data in browser settings to remove stored permission.',
+    page: 'Google Analytics is off on this page. Storage is unavailable; clear site data in browser settings before navigating or refreshing.'
   } : {
-    on: 'Analitik diizinkan pada peramban ini.', off: 'Analitik ditolak pada peramban ini.',
-    session: 'Analitik dinonaktifkan untuk tab ini, termasuk perpindahan halaman dan pemuatan ulang. Pilihan permanen gagal disimpan dan pilihan lama mungkin masih ada. Hapus data situs melalui pengaturan peramban untuk menarik izin tersimpan.',
-    page: 'Analitik dinonaktifkan pada halaman ini. Penyimpanan tidak tersedia; hapus data situs melalui pengaturan peramban sebelum berpindah atau memuat ulang.'
+    on: 'Google Analytics diizinkan pada peramban ini.', off: 'Google Analytics ditolak pada peramban ini.',
+    tab: 'Google Analytics tetap nonaktif pada tab ini. Simpan pilihan izin di sini untuk mengaktifkannya.',
+    session: 'Google Analytics dinonaktifkan untuk tab ini, termasuk perpindahan halaman dan pemuatan ulang. Pilihan permanen gagal disimpan dan pilihan lama mungkin masih ada di tab lain. Hapus data situs melalui pengaturan peramban untuk menarik izin tersimpan.',
+    page: 'Google Analytics dinonaktifkan pada halaman ini. Penyimpanan tidak tersedia; hapus data situs melalui pengaturan peramban sebelum berpindah atau memuat ulang.'
   };
   function read() {
     try {
@@ -31,9 +33,14 @@
       }
       return;
     }
-    if (window.__wayangLoaded) return;
+    if (window.__wayangLoaded) {
+      window.gtag('consent', 'update', { analytics_storage: 'granted' });
+      return;
+    }
     window.__wayangLoaded = true; window.dataLayer = window.dataLayer || [];
     window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('consent', 'default', { analytics_storage: 'denied' });
+    window.gtag('consent', 'update', { analytics_storage: 'granted' });
     window.gtag('js', new Date()); window.gtag('config', gaId);
     const script = document.createElement('script'); script.async = true;
     script.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId; document.head.appendChild(script);
@@ -42,8 +49,14 @@
     value = value === true; let sessionDenied = false, saved = false;
     if (!value) sessionDenied = denySession();
     try {
+      if (value) {
+        // Verify the tab veto is cleared before publishing a shared grant.
+        sessionStorage.removeItem(deniedKey);
+        localStorage.getItem(key);
+        if (sessionStorage.getItem(deniedKey) === '1') throw new Error('Tab refusal remains');
+      }
       localStorage.setItem(key, JSON.stringify({ analytics: value }));
-      if (value) { sessionStorage.removeItem(deniedKey); window.__wayangDenied = false; }
+      if (value) window.__wayangDenied = false;
       saved = true;
     } catch { sessionDenied = denySession() || sessionDenied; }
     apply();
@@ -60,5 +73,14 @@
   document.querySelectorAll('[data-cookie-accept]').forEach(node => node.addEventListener('click', () => save(true)));
   document.querySelectorAll('[data-cookie-reject]').forEach(node => node.addEventListener('click', () => save(false)));
   document.getElementById('cookie-settings')?.addEventListener('submit', event => { event.preventDefault(); save(checkbox?.checked === true); });
-  window.addEventListener('storage', apply);
+  window.addEventListener('storage', event => {
+    if (event.key !== key && event.key !== null) return;
+    let granted = false;
+    try { granted = JSON.parse(event.newValue || 'null')?.analytics === true; } catch {}
+    if (!granted) denySession();
+    apply();
+    const current = read();
+    const checkbox = document.getElementById('analytics'); if (checkbox) checkbox.checked = current.analytics;
+    document.querySelectorAll('[data-consent-status]').forEach(node => { node.textContent = current.analytics ? messages.on : (granted ? messages.tab : messages.off); });
+  });
 })();
