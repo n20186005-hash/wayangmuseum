@@ -1,6 +1,6 @@
 export const guideCopy = {
   "id": {
-    "title": "Museum Wayang Jakarta: Jam Buka, Tiket & Kunjungan",
+    "title": "Museum Wayang Jakarta: Jam Buka, Tiket & Panduan Kota Tua",
     "description": "Panduan Museum Wayang Kota Tua: perbedaan jam Maps dan portal resmi, kategori tiket, pembaruan museum, koleksi dan persiapan kunjungan.",
     "eyebrow": "Museum Wayang · Kota Tua Jakarta",
     "h1": "Museum Wayang Jakarta",
@@ -11,8 +11,8 @@ export const guideCopy = {
     "photoCredit": "Chainwit., foto 6 Mei 2025, melalui Wikimedia Commons. Ukuran diubah dan tampilan dipotong; bukan bukti akses atau kondisi saat ini.",
     "stats": [
       [
-        "Peta, 19 Oktober 2026",
-        "4,5 / 5 · 5.234 ulasan publik"
+        "Peta, 29 Oktober 2026",
+        "4,5 / 5 · 5.243 ulasan Google"
       ],
       [
         "Lokasi",
@@ -61,7 +61,7 @@ export const guideCopy = {
     "location": "Museum berada di kawasan Jalan Pintu Besar Utara, Pinangsia, Taman Sari, Jakarta Barat 11110. Cantuman Maps juga menampilkan penulisan Jl. Kali Besar Timur 4 No. 27, RT 3/RW 6. Pin yang diperiksa: -6.1349287, 106.8123108. Perbedaan label jalan tidak membuktikan semua sisi bangunan menjadi pintu masuk.",
     "faqTitle": "Tanya jawab sebelum berkunjung",
     "sourcesTitle": "Sumber publik & batasnya",
-    "sourceNote": "Diperiksa 19 Oktober 2026. Informasi Maps adalah cuplikan pihak ketiga; tarif dan kegiatan pemerintah memiliki tanggal serta kategori masing-masing. Foto adalah arsip, bukan konfirmasi akses atau ketersediaan fasilitas.",
+    "sourceNote": "Diperiksa 29 Oktober 2026. Informasi Maps adalah cuplikan pihak ketiga; tarif dan kegiatan pemerintah memiliki tanggal serta kategori masing-masing. Foto adalah arsip, bukan konfirmasi akses atau ketersediaan fasilitas.",
     "faq": [
       [
         "Kapan Museum Wayang buka?",
@@ -98,7 +98,7 @@ export const guideCopy = {
     ]
   },
   "en": {
-    "title": "Wayang Museum Jakarta: Opening Hours, Tickets & Visiting",
+    "title": "Wayang Museum Jakarta: Opening Hours, Tickets & Kota Tua Guide",
     "description": "Independent Kota Tua Wayang Museum guide: conflicting weekday hours, sourced ticket categories, renewed displays, programmes and visit preparation.",
     "eyebrow": "Wayang Museum · Kota Tua Jakarta",
     "h1": "Wayang Museum Jakarta",
@@ -109,8 +109,8 @@ export const guideCopy = {
     "photoCredit": "Chainwit., photographed 6 May 2025, via Wikimedia Commons. Resized and cropped for display; not evidence of current access or conditions.",
     "stats": [
       [
-        "Maps, 19 October 2026",
-        "4.5 / 5 · 5,234 public reviews"
+        "Maps, 29 October 2026",
+        "4.5 / 5 · 5,243 Google reviews"
       ],
       [
         "Location",
@@ -159,7 +159,7 @@ export const guideCopy = {
     "location": "The museum is in the Jalan Pintu Besar Utara area, Pinangsia, Taman Sari, West Jakarta 11110. Maps also displays Jl. Kali Besar Timur 4 No. 27, RT 3/RW 6 wording. The checked pin is -6.1349287, 106.8123108. Different road labels do not establish that every side of the building is an entrance.",
     "faqTitle": "Questions before visiting",
     "sourcesTitle": "Public sources and their limits",
-    "sourceNote": "Checked 19 October 2026. Maps is a third-party snapshot; government prices and events have their own dates and categories. Photographs are archival and do not confirm access or available facilities.",
+    "sourceNote": "Checked 29 October 2026. Maps is a third-party snapshot; government prices and events have their own dates and categories. Photographs are archival and do not confirm access or available facilities.",
     "faq": [
       [
         "What are Wayang Museum’s opening hours?",

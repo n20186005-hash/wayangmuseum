@@ -1,0 +1,44 @@
+---
+import { topicsId, topicsEn, GROUP_LABELS_ID, type TopicGroup } from '../data/topics';
+import { type Locale } from '../data/site';
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const order: TopicGroup[] = ['visit', 'culture', 'nearby', 'food', 'route'];
+const labelsEn: Record<TopicGroup, string> = {
+  visit: 'Visiting & practical info',
+  culture: 'Wayang, history & collection',
+  nearby: 'Kota Tua museums & historic buildings',
+  food: 'Food & breaks nearby',
+  route: 'Kota Tua routes & itineraries'
+};
+const list = locale === 'id'
+  ? Object.values(topicsId)
+  : Object.values(topicsEn);
+const groups = order.map(g => ({
+  key: g,
+  label: locale === 'id' ? GROUP_LABELS_ID[g] : labelsEn[g],
+  items: list.filter(t => t.group === g)
+})).filter(g => g.items.length > 0);
+---
+<section class="section cluster"><div class="wrap">
+  <p class="eyebrow">{locale === 'id' ? 'Panduan topik' : 'Topic guides'}</p>
+  <h2>{locale === 'id' ? 'Panduan lengkap Museum Wayang & Kota Tua' : 'Complete guides to Wayang Museum & Kota Tua'}</h2>
+  <div class="cluster-grid">
+    {groups.map(group => (
+      <div class="cluster-group">
+        <h3>{group.label}</h3>
+        <ul>{group.items.map(t => (
+          <li><a href={locale === 'id' ? `/${t.slug}/` : `/en/${t.slug}/`}>{t.h1}</a></li>
+        ))}</ul>
+      </div>
+    ))}
+  </div>
+</div></section>
+
+<style>
+  .cluster-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; margin-top: 1.5rem; }
+  .cluster-group h3 { font-size: 1.05rem; margin: 0 0 .8rem; color: var(--indigo); }
+  .cluster-group ul { list-style: none; padding: 0; margin: 0; display: grid; gap: .5rem; }
+  .cluster-group a { text-decoration: none; font-size: .92rem; font-weight: 600; }
+  .cluster-group a:hover { color: var(--gold); text-decoration: underline; }
+</style>

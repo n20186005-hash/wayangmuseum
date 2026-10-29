@@ -1,8 +1,9 @@
 ---
 import { paths, type Locale, type PageKey } from '../data/site';
-interface Props { locale: Locale; pageKey: PageKey; }
-const { locale, pageKey } = Astro.props;
+interface Props { locale: Locale; pageKey?: PageKey; altHref?: string; }
+const { locale, pageKey = 'home', altHref } = Astro.props;
 const home = paths.home[locale];
+const switchHref = altHref ?? paths[pageKey][locale === 'id' ? 'en' : 'id'];
 const labels = locale === 'id' ? ['Kunjungan','Koleksi','Rute','Tanya jawab','Peta'] : ['Visit','Collection','Getting here','FAQ','Map'];
 ---
-<header class="site-header"><a class="brand" href={home}><img src="/logo.svg" width="46" height="46" alt="" /><span><strong>Museum Wayang</strong><small>{locale === 'id' ? 'Panduan pengunjung independen' : 'Independent visitor guide'}</small></span></a><a class="language-switch" href={paths[pageKey][locale === 'id' ? 'en' : 'id']} aria-label={locale === 'id' ? 'Read in English' : 'Baca dalam Bahasa Indonesia'}>{locale === 'id' ? 'EN' : 'ID'}</a><nav aria-label={locale === 'id' ? 'Navigasi utama' : 'Primary navigation'}>{['kunjungan','koleksi','rute','tanya','peta'].map((id,i)=><a href={`${home}#${id}`}>{labels[i]}</a>)}</nav></header>
+<header class="site-header"><a class="brand" href={home}><img src="/logo.svg" width="46" height="46" alt="" /><span><strong>Museum Wayang</strong><small>{locale === 'id' ? 'Panduan pengunjung independen' : 'Independent visitor guide'}</small></span></a><a class="language-switch" href={switchHref} aria-label={locale === 'id' ? 'Read in English' : 'Baca dalam Bahasa Indonesia'}>{locale === 'id' ? 'EN' : 'ID'}</a><nav aria-label={locale === 'id' ? 'Navigasi utama' : 'Primary navigation'}>{['kunjungan','koleksi','rute','tanya','peta'].map((id,i)=><a href={`${home}#${id}`}>{labels[i]}</a>)}</nav></header>

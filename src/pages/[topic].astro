@@ -1,0 +1,11 @@
+---
+import TopicPage from '../components/TopicPage.astro';
+import { topicSlugsId, topicsEn, getTopic } from '../data/topics';
+export function getStaticPaths() {
+  return topicSlugsId.map(slug => ({ params: { topic: slug } }));
+}
+const { topic } = Astro.params as { topic: string };
+const content = getTopic('id', topic);
+if (!content) return Astro.redirect('/404');
+---
+<TopicPage content={content} locale="id" hasEn={topic in topicsEn} />

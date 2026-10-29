@@ -1,10 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import TopicCluster from '../components/TopicCluster.astro';
 import { guideCopy } from '../data/guide';
 import { attraction, sources, type Locale } from '../data/site';
 interface Props { locale: Locale; }
 const { locale } = Astro.props; const c = guideCopy[locale];
 const schema = { '@context':'https://schema.org','@graph':[
+ {'@type':'WebSite','@id':'https://wayangmuseum.com/#website',name:'Museum Wayang — Panduan Independen',url:'https://wayangmuseum.com/',inLanguage: locale === 'id' ? 'id-ID' : 'en'},
  {'@type':'Museum','@id':'https://wayangmuseum.com/#museum',name:'Museum Wayang',alternateName:'Wayang Museum',address:{'@type':'PostalAddress',addressLocality:'Pinangsia, Taman Sari, Jakarta Barat',addressRegion:'DKI Jakarta',postalCode:'11110',addressCountry:'ID'},geo:{'@type':'GeoCoordinates',latitude:attraction.latitude,longitude:attraction.longitude},hasMap:attraction.mapsShareUrl},
  {'@type':'FAQPage',mainEntity:c.faq.map(([name,text])=>({'@type':'Question',name,acceptedAnswer:{'@type':'Answer',text}}))}
 ]};
@@ -16,6 +18,7 @@ const schema = { '@context':'https://schema.org','@graph':[
 <section id="koleksi" class="section"><div class="wrap grid-two"><div><p class="eyebrow">03 · {locale === 'id' ? 'Koleksi' : 'Collection'}</p><h2>{c.collectionTitle}</h2><p>{c.collection}</p></div><article class="card"><p>{c.event}</p><a href={sources[3].href}>{sources[3][locale]} ↗</a></article></div></section>
 <section id="rute" class="section soft"><div class="wrap"><p class="eyebrow">04 · {locale === 'id' ? 'Rute & fasilitas' : 'Access & facilities'}</p><h2>{c.accessTitle}</h2><div class="card-list">{c.accessCards.map(([title,text])=><article class="card"><h3>{title}</h3><p>{text}</p></article>)}</div></div></section>
 <section class="section"><div class="wrap grid-two"><h2>{c.nearbyTitle}</h2><p>{c.nearby}</p></div></section>
+<TopicCluster locale={locale} />
 <section id="peta" class="section dark"><div class="wrap grid-two"><div><p class="eyebrow">05 · {c.map}</p><h2>{c.locationTitle}</h2><p>{c.location}</p><a class="button button-gold" href={attraction.mapsShareUrl} target="_blank" rel="noreferrer">Google Maps ↗</a></div><iframe class="map-frame" title={locale === 'id' ? 'Peta Museum Wayang Jakarta' : 'Wayang Museum Jakarta location map'} src="https://maps.google.com/maps?q=-6.1349287,106.8123108&amp;z=17&amp;output=embed" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div></section>
 <section id="tanya" class="section"><div class="wrap grid-two"><h2>{c.faqTitle}</h2><div>{c.faq.map(([q,a])=><details><summary>{q}</summary><p>{a}</p></details>)}</div></div></section>
 <section id="sumber" class="section soft"><div class="wrap"><h2>{c.sourcesTitle}</h2><p>{c.sourceNote}</p><ul class="source-list">{sources.map(source=><li><a href={source.href}>{source[locale]}</a></li>)}<li><a href={attraction.mapsShareUrl}>Google Maps · {locale === 'id' ? '19 Oktober 2026' : '19 October 2026'}</a></li></ul></div></section></main><script is:inline type="application/ld+json" set:html={JSON.stringify(schema)}></script></BaseLayout>

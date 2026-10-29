@@ -1,0 +1,21 @@
+---
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { type Locale } from '../data/site';
+interface Props {
+  title: string;
+  description: string;
+  locale: Locale;
+  slug: string;
+  hasEn: boolean;
+  altHref?: string;
+  noIndex?: boolean;
+}
+const { title, description, locale, slug, hasEn, altHref, noIndex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const idPath = `/${slug}/`;
+const enPath = `/en/${slug}/`;
+const ogImage = new URL('/assets/museum-wayang-exterior.webp', Astro.site).href;
+---
+<!doctype html><html lang={locale}><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="theme-color" content="#1e2a52" /><title>{title}</title><meta name="description" content={description} /><meta name="robots" content={noIndex ? 'noindex,follow' : 'index,follow,max-image-preview:large'} /><link rel="canonical" href={canonical} /><link rel="alternate" hreflang="id-ID" href={new URL(idPath, Astro.site).href} />{hasEn && <link rel="alternate" hreflang="en" href={new URL(enPath, Astro.site).href} />}<link rel="alternate" hreflang="x-default" href={new URL(idPath, Astro.site).href} /><meta property="og:type" content="website" /><meta property="og:site_name" content={locale === 'id' ? 'Museum Wayang — Panduan Independen' : 'Museum Wayang — Independent Guide'} /><meta property="og:locale" content={locale === 'id' ? 'id_ID' : 'en_US'} /><meta property="og:title" content={title} /><meta property="og:description" content={description} /><meta property="og:url" content={canonical} /><meta property="og:image" content={ogImage} /><meta property="og:image:alt" content={locale === 'id' ? 'Foto arsip eksterior Museum Wayang oleh Chainwit.' : 'Archival Museum Wayang exterior photograph by Chainwit.'} /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content={title} /><meta name="twitter:description" content={description} /><link rel="icon" href="/favicon.svg" type="image/svg+xml" /><link rel="apple-touch-icon" href="/icon-192.png" /></head><body><a class="skip-link" href="#konten">{locale === 'id' ? 'Lewati ke isi' : 'Skip to content'}</a><SiteHeader locale={locale} pageKey="home" altHref={altHref} /><slot /><SiteFooter locale={locale} /><script is:inline src="/js/consent.js" defer></script><script is:inline src="/js/retire-offline.js" defer></script></body></html>
